@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>GPT-4 Three.js Scene Generator</title>
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+  <style>
+    canvas {
+      display: block;
+    }
+  </style>
+</head>
+
+<body class="bg-gray-100">
+  <div class="container mx-auto py-8">
+    <h1 class="text-3xl font-bold mb-4">GPT-4 Three.js Scene Generator</h1>
+    <div class="flex justify-center items-center">
+      <div class="w-1/2">
+        <textarea id="prompt" class="w-full h-32 p-2 border border-gray-300 rounded-md resize-none"
+          placeholder="Enter your prompt here"></textarea>
+        <button id="generateBtn"
+          class="mt-4 px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 focus:outline-none focus:bg-blue-600">
+          Generate Scene
+        </button>
+      </div>
+    </div>
+    <div id="sceneContainer" class="mt-8"></div>
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/110/three.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/gpt-4-api"></script>
+  <script>
+    const sceneContainer = document.getElementById('sceneContainer');
+    const generateBtn = document.getElementById('generateBtn');
+    const promptInput = document.getElementById('prompt');
+
+    generateBtn.addEventListener('click', generateScene);
+
+    function generateScene() {
+      const prompt = promptInput.value;
+
+      // Call GPT-4 API to generate scene based on the prompt
+      gpt4API.generateScene(prompt)
+        .then(sceneData => {
+          // Create Three.js scene using the generated data
+          const scene = new THREE.Scene();
+          const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+          const renderer = new THREE.WebGLRenderer();
+          renderer.setSize(window.innerWidth, window.innerHeight);
+          sceneContainer.appendChild(renderer.domElement);
+
+          // Add your Three.js scene setup and animation logic here based on the generated sceneData
+
+          function animate() {
+            requestAnimationFrame(animate);
+            // Add your animation logic here
+            renderer.render(scene, camera);
+          }
+
+          animate();
+        })
+        .catch(error => {
+          console.error('Error generating scene:', error);
+        });
+    }
+  </script>
+</body>
+
+</html>
